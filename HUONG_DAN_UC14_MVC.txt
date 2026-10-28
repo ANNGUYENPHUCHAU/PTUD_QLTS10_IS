@@ -1,0 +1,6 @@
+UC14 - Ma nguon MVC - Copy tat ca noi dung ZIP vao D:\xampp\htdocs\PTUD_QLTS10_IS\
+Khong xoa UC14_CapSBD_PhanPhongThi ban cu. Khong import SQL lai neu database uc14_demo dang dung.
+Chay Apache & MySQL tren XAMPP, mo http://localhost/PTUD_QLTS10_IS/public/uc14.php
+Test: D:\xampp\php\php.exe tests\test_uc14_algorithm.php
+Kiem tra cu phap: D:\xampp\php\php.exe -l public\uc14.php
+Chi commit/push feature/uc14-mvc sau khi test.
