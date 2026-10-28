@@ -1,0 +1,2 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Không có quyền truy cập</title><link rel="stylesheet" href="assets/uc19.css"></head>
+<body class="login-page"><main class="login-card"><h1>Không có quyền truy cập</h1><p role="alert"><?= e($errorMessage) ?></p><form method="post"><?php formFields('logout') ?><button class="primary">Đăng xuất</button></form></main></body></html>
