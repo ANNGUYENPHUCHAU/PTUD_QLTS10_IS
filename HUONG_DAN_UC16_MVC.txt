@@ -1,0 +1,14 @@
+UC16 - THUC HIEN XET TUYEN
+==========================
+
+Branch: feature/uc16-mvc
+Thu muc code: UC16_ThucHienXetTuyen
+
+CHAY TREN XAMPP
+1. Dat repository tai: C:\xampp\htdocs\PTUD_QLTS10_IS
+2. Bat Apache trong XAMPP.
+3. Mo: http://localhost/PTUD_QLTS10_IS/UC16_ThucHienXetTuyen/
+
+Khong can bat MySQL. UC16 dung SQLite va tu tao du lieu mau lan dau.
+UC14 o thu muc goc duoc giu nguyen.
+
