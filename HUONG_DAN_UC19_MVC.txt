@@ -1,0 +1,80 @@
+HƯỚNG DẪN CHẠY CHỨC NĂNG UC19 - QUẢN LÝ PHÁCH
+==============================================
+
+Thư mục chức năng: UC19_QuanLyPhach
+Chức năng: Quản lý phách theo túi chấm sau dồn túi.
+
+1. CẤU TRÚC
+
+- app/Controllers: Xử lý yêu cầu, phân quyền và luồng thao tác UC19.
+- app/Models: Truy vấn, đối chiếu và lưu dữ liệu trong cơ sở dữ liệu.
+- app/Services: Kiểm tra dữ liệu và tạo số phách.
+- app/Views/UC19: Giao diện đăng nhập, quản lý túi và xem dữ liệu chấm thi.
+- public/uc19.php: Điểm vào của chức năng.
+- database/uc19_demo.sql: Schema và dữ liệu mẫu.
+- tests/test_uc19.php: Bộ kiểm thử UC19.
+
+2. CÀI ĐẶT VÀ CHẠY TRÊN XAMPP
+
+1. Đặt repository tại:
+   C:\xampp\htdocs\PTUD_QLTS10_IS
+2. Bật Apache và MySQL trong XAMPP.
+3. Mở phpMyAdmin và import:
+   UC19_QuanLyPhach\database\uc19_demo.sql
+   Script tạo database uc19_demo. Nếu database này đã tồn tại, script báo
+   lỗi và không ghi đè; hãy sao lưu/đổi tên database cũ trước khi cài mới.
+4. Mở ứng dụng:
+   http://localhost/PTUD_QLTS10_IS/UC19_QuanLyPhach/
+5. Đăng nhập demo:
+   Tài khoản: thuky
+   Mật khẩu: ThuKy@123
+
+Kết nối mặc định: 127.0.0.1:3306, user root, mật khẩu rỗng.
+Cấu hình nằm tại UC19_QuanLyPhach\app\Core\uc19-config.php.
+Nếu cần thay đổi cấu hình cục bộ, tạo file
+UC19_QuanLyPhach\app\Core\uc19-config.local.php trả về mảng cấu hình PHP.
+
+3. LUỒNG SỬ DỤNG
+
+1. Chọn kỳ thi và môn thi tự luận. UC19 không lọc theo điểm thi/phòng thi.
+2. Chọn túi chấm để xem mã túi, biên bản bàn giao và danh sách bài thi.
+3. Kiểm tra số bài, số tờ giấy thi và thông tin đối chiếu.
+4. Chọn "Tạo số phách" để tạo bản nháp. Hệ thống từ chối nếu dữ liệu
+   thiếu, sai số bài/số tờ, trùng thí sinh giữa các túi hoặc túi đã tạo phách.
+5. Kiểm tra bản xem trước. Có thể tạo lại một số phách hoặc hủy bản nháp.
+6. Chọn "Xác nhận lưu" để lưu phách và nhật ký.
+7. Sau khi lưu, có thể chọn "Xem dữ liệu phục vụ chấm thi".
+
+Số bài không đồng nghĩa với số tờ: mỗi bài có thể có nhiều tờ giấy thi.
+Số phách gồm 9 chữ số ngẫu nhiên, duy nhất trong kỳ thi/môn thi.
+Dữ liệu xem phục vụ chấm thi chỉ gồm số phách và số tờ; không hiển thị
+họ tên, SBD, phòng thi hay điểm thi.
+
+UC19 chỉ quản lý phách từ dữ liệu đã bàn giao sau khi dồn túi. Chức năng
+không thu bài, mở niêm phong, dồn túi hoặc nhập điểm.
+
+4. TÀI KHOẢN DEMO VÀ PHÂN QUYỀN
+
+- thuky / ThuKy@123: Quản lý phách và xem dữ liệu đối chiếu.
+- khongquyen / ThuKy@123: Không có quyền quản lý phách.
+- khongdoichieu / ThuKy@123: Có quyền truy cập dữ liệu phách nhưng không
+  được xem đối chiếu, tạo/lưu phách hoặc xem nhật ký.
+
+5. KIỂM THỬ
+
+Chạy trong PowerShell từ thư mục gốc repository:
+
+& C:\xampp\php\php.exe UC19_QuanLyPhach\tests\test_uc19.php
+
+Bộ kiểm thử sử dụng SQLite trong bộ nhớ, không sửa database demo MySQL.
+Để kiểm tra trực tiếp trên XAMPP, mở ứng dụng và thử cả tài khoản có/không
+có quyền theo mục 4.
+
+6. LƯU Ý DỮ LIỆU
+
+- Chỉ import file SQL khi cài đặt mới. Không import lại để reset database
+  đang có dữ liệu phách cần giữ.
+- Không tự động chuyển mã bì theo phòng sang túi chấm; dữ liệu dồn túi phải
+  được xác lập theo biên bản bàn giao.
+- Khi triển khai thật, thay tài khoản demo, dùng tài khoản database riêng và
+  cấu hình web root vào thư mục public.
