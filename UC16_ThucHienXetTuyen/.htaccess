@@ -1,7 +1,6 @@
 Options -Indexes
 RewriteEngine On
 
-# Cho phép upload nguyên thư mục vào public_html trên hosting Apache/cPanel.
 RewriteRule ^(?:app|config|database|scripts|storage|tests|vendor)(?:/|$) - [F,L,NC]
 RewriteRule (^|/)\. - [F,L]
 RewriteRule ^assets/(.*)$ public/assets/$1 [L]
