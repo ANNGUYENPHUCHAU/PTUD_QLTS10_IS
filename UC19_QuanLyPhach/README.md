@@ -6,7 +6,7 @@ Triển khai theo tài liệu **UC19_Quan_ly_phach_bai_thi (1).docx** người d
 
 1. Bật Apache và MySQL.
 2. Import [database/uc19_demo.sql](database/uc19_demo.sql) bằng phpMyAdmin. Script tạo CSDL **uc19_demo**; script sẽ báo lỗi nếu CSDL này đã tồn tại và không ghi đè dữ liệu.
-3. Mở **http://localhost/UC19_QuanLyPhach/**.
+3. Mở **http://localhost/PTUD_QLTS10_IS/UC19_QuanLyPhach/**.
 4. Đăng nhập **thuky / ThuKy@123**.
 
 Kết nối mặc định: 127.0.0.1:3306, root, mật khẩu rỗng. Cấu hình ở [app/Core/uc19-config.php](app/Core/uc19-config.php); có thể ghi đè bằng app/Core/uc19-config.local.php trả về mảng PHP. Nếu có cấu hình local, đặt db_name thành uc19_demo.
