@@ -52,7 +52,7 @@ final class UC09Model
         $target = $this->getTargetInfo($schoolId, $year);
         $tongChiTieu = $target ? (int)$target['tong_chi_tieu'] : 0;
 
-        // Tổng số hồ sơ đăng ký
+        // Tổng số hồ sơ đăng ký và các tiêu chí
         $stmt = $this->db->prepare(
             'SELECT 
                 COUNT(*) as tong_ho_so,
