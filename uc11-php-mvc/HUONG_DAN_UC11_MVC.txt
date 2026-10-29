@@ -1,0 +1,236 @@
+HƯỚNG DẪN CHẠY DEMO UC11 PHP MVC
+Thiết lập và quản lý đợt, lịch tuyển sinh
+============================================================
+
+1. PHẦN MỀM CẦN CÓ
+- XAMPP có PHP 8.1 trở lên hoặc máy có PHP 8.1 trở lên.
+- Trình duyệt Chrome, Edge hoặc Firefox.
+- VS Code để xem/sửa mã (không bắt buộc).
+- Bật extension pdo_sqlite.
+- Không cần Composer, Node.js hoặc MySQL.
+
+2. GIẢI NÉN VÀ ĐẶT THƯ MỤC
+Giải nén UC11_PHP_MVC.zip vào:
+    C:\xampp\htdocs\
+
+Đường dẫn đúng sau khi giải nén phải là:
+    C:\xampp\htdocs\uc11-php-mvc\public\uc11.php
+
+Nếu có hai thư mục uc11-php-mvc lồng nhau, chuyển thư mục chứa app,
+database, public, tests ra đúng vị trí ở trên.
+
+3. BẬT PDO SQLITE
+- Mở XAMPP Control Panel.
+- Ở dòng Apache, chọn Config -> PHP (php.ini).
+- Nhấn Ctrl+F tìm pdo_sqlite.
+- Nếu thấy:
+      ;extension=pdo_sqlite
+  thì bỏ dấu chấm phẩy để thành:
+      extension=pdo_sqlite
+- Lưu php.ini.
+- Stop Apache nếu đang chạy, rồi Start Apache.
+
+Lưu ý: dự án dùng SQLite. Không cần mở phpMyAdmin, không cần tạo
+database MySQL và không cần nhập tài khoản root MySQL.
+
+4. MỞ ỨNG DỤNG
+Trong XAMPP Control Panel, Start Apache.
+Mở trình duyệt và nhập:
+    http://localhost/uc11-php-mvc/public/uc11.php
+
+Nếu Apache chạy cổng 8080:
+    http://localhost:8080/uc11-php-mvc/public/uc11.php
+
+Không nhấp đúp vào tệp uc11.php để mở theo dạng file:///.
+PHP cần được chạy qua Apache hoặc PHP built-in server.
+
+5. ĐĂNG NHẬP
+    Tài khoản: canbo
+    Mật khẩu: Demo@123
+
+Sau đăng nhập, ứng dụng hiển thị biểu mẫu tạo đợt, danh sách đợt
+và nhật ký thao tác. Tài khoản cố định chỉ phục vụ demo học tập.
+
+6. CƠ SỞ DỮ LIỆU
+Ứng dụng tự tạo tệp:
+    storage/admissions.sqlite
+
+Lược đồ nằm ở:
+    database/uc11_demo.sql
+
+UC11Model tự đọc lược đồ khi khởi tạo. Không cần import thủ công.
+Tệp .sql dùng cú pháp SQLite, không dành cho phpMyAdmin/MySQL.
+Lần đầu danh sách trống là bình thường; tạo đợt bằng biểu mẫu.
+
+Dữ liệu còn sau khi dừng và mở lại Apache. Phiên PHP dùng cơ chế
+session của PHP. Thư mục storage phải cho PHP quyền ghi.
+
+7. KỊCH BẢN CHẠY THỬ
+A. Tạo thành công:
+- Nhập tên "Đợt tuyển sinh chính thức 2027".
+- Mở đăng ký: 01/06/2027 08:00.
+- Đóng đăng ký: 10/06/2027 17:00.
+- Xét tuyển: 15/06/2027 08:00.
+- Xác nhận nhập học: 20/06/2027 17:00.
+- Nhấn "Lưu đợt tuyển sinh".
+- Kiểm tra thông báo, danh sách và nhật ký.
+
+B. Kiểm tra thứ tự sai:
+- Tạo đợt với đóng đăng ký trước mở đăng ký.
+- Nhấn Lưu.
+- Hệ thống báo lỗi và giữ nội dung để sửa.
+
+C. Kiểm tra trùng:
+- Tạo một đợt khác từ 10/06 đến 25/06/2027.
+- Đặt các mốc nội bộ tăng dần.
+- Nhấn Lưu.
+- Hệ thống thông báo tên đợt bị trùng, không tạo thêm.
+
+D. Điều chỉnh:
+- Chọn "Sửa lịch" của đợt Chưa mở.
+- Đổi tên hoặc các mốc sang lịch hợp lệ, không giao đợt khác.
+- Lưu, kiểm tra danh sách và nhật ký.
+
+E. Mở và đóng đợt theo giờ thực tế:
+- Tạo một đợt không trùng lịch khác.
+- Đặt mở đăng ký trước thời gian hiện tại vài phút.
+- Đặt đóng đăng ký sau thời gian hiện tại vài phút.
+- Xét tuyển và xác nhận nhập học đặt sau giờ đóng.
+- Chọn "Mở đợt": trạng thái chuyển Đang mở.
+- Chọn "Đóng đợt" khi chưa đến hạn: bị từ chối.
+- Đợi đến giờ đóng rồi chọn "Đóng đợt": trạng thái Đã đóng.
+
+Các mốc theo giờ Việt Nam. Mở/đóng là thao tác thủ công.
+Đợt ví dụ năm 2027 chỉ để thử tạo/sửa; muốn thử mở ngay thì dùng
+thời gian phù hợp lúc bạn đang chạy demo.
+
+F. Đăng xuất:
+- Bấm Đăng xuất rồi Hủy: vẫn ở phiên hiện tại.
+- Bấm Đăng xuất rồi xác nhận: kết thúc phiên, về đăng nhập.
+- Đăng nhập lại để xem nhật ký đăng xuất.
+
+8. CẤU TRÚC VÀ NHIỆM VỤ TỪNG LỚP
+- app/Controllers/UC11Controller.php
+  Nhận yêu cầu, kiểm tra đăng nhập/CSRF, gọi Service và chọn View.
+
+- app/Core/Database.php
+  Kết nối PDO SQLite.
+
+- app/Core/uc11-config.php
+  Cấu hình múi giờ và đường dẫn tệp CSDL.
+
+- app/Core/uc11-helpers.php
+  Hàm escape HTML.
+
+- app/Models/UC11Model.php
+  Truy vấn SQL, đọc/ghi dữ liệu, giao dịch và nhật ký.
+
+- app/Services/UC11Service.php
+  Kiểm tra dữ liệu, thứ tự thời gian, trùng lịch, điều kiện mở/đóng
+  và phiên bản bản ghi. Không chứa truy vấn SQL.
+
+- app/Views/UC11/
+  layout.php: khung giao diện.
+  index.php: biểu mẫu, danh sách đợt và nhật ký.
+  login.php: đăng nhập.
+  error.php: thông báo lỗi.
+
+- database/uc11_demo.sql
+  Lược đồ khởi tạo SQLite.
+
+- public/uc11.php
+  Điểm vào chính.
+  public/index.php chuyển đến uc11.php.
+
+- public/assets/style.css
+  Định dạng giao diện.
+
+- tests/test_uc11_algorithm.php
+  Bộ kiểm tra nghiệp vụ bằng CSDL trong bộ nhớ.
+
+Luồng xử lý:
+Trình duyệt -> public/uc11.php -> Controller -> Service -> Model.
+Model đọc/ghi CSDL; Controller chọn View để hiển thị kết quả.
+
+9. QUY TẮC GIẢ ĐỊNH CẦN ĐỐI CHIẾU VỚI GIẢNG VIÊN
+- Tên bắt buộc, tối đa 150 ký tự.
+- Mở < đóng đăng ký < xét tuyển < xác nhận nhập học.
+- Khoảng từ mở đăng ký đến xác nhận nhập học không giao nhau,
+  kể cả điểm biên. Đợt đã đóng cũng được kiểm tra trùng.
+- Chỉ điều chỉnh đợt Chưa mở.
+- Chỉ mở đợt Chưa mở khi giờ mở <= hiện tại < giờ đóng.
+- Chỉ đóng đợt Đang mở khi hiện tại >= giờ đóng đăng ký.
+- Không tự chuyển trạng thái, không mở lại đợt đã đóng.
+- Không có xóa đợt vì đặc tả UC11 không mô tả.
+Các quy tắc này làm rõ những điểm chưa được nêu chi tiết trong nguồn.
+
+10. CHẠY BẰNG PHP KHÔNG DÙNG APACHE
+Mở terminal trong thư mục uc11-php-mvc:
+    php -S 127.0.0.1:8000 -t public
+
+Mở:
+    http://127.0.0.1:8000/uc11.php
+
+Trên Windows nếu lệnh php không được nhận diện:
+    C:\xampp\php\php.exe -S 127.0.0.1:8000 -t public
+
+Giữ cửa sổ terminal mở khi dùng ứng dụng; Ctrl+C để dừng.
+
+11. CHẠY KIỂM TRA TỰ ĐỘNG
+Tại thư mục uc11-php-mvc:
+    php tests/test_uc11_algorithm.php
+
+Hoặc:
+    C:\xampp\php\php.exe tests\test_uc11_algorithm.php
+
+Kết quả mong đợi: 18 kiểm tra thành công.
+Bộ kiểm tra dùng CSDL trong bộ nhớ, không xóa dữ liệu demo.
+Bộ 63 test case thủ công trong Word vẫn cần thực hiện riêng.
+
+12. LỖI THƯỜNG GẶP
+- "Not Found" hoặc 404:
+  Kiểm tra đường dẫn thư mục, tên uc11-php-mvc và cổng Apache.
+
+- "could not find driver" hoặc yêu cầu bật pdo_sqlite:
+  Bật extension=pdo_sqlite đúng php.ini và restart Apache.
+  PHP CLI có thể dùng php.ini khác Apache. Kiểm tra bằng:
+      php --ini
+
+- "unable to open database file" hoặc "readonly database":
+  Đảm bảo storage tồn tại, nằm trên ổ ghi được và PHP có quyền ghi.
+
+- Apache không Start:
+  Kiểm tra cổng 80/443 có bị ứng dụng khác sử dụng.
+  Nếu đổi Apache sang 8080, dùng URL có localhost:8080.
+
+- Lỗi 500 liên quan .htaccess:
+  Xem Apache error.log. Bật mod_rewrite và AllowOverride phù hợp.
+  Có thể dùng cách PHP built-in server ở mục 10 để chạy bài tập.
+
+- Không mở được đợt:
+  Kiểm tra trạng thái Chưa mở và giờ hiện tại nằm trong khoảng đăng ký.
+
+- Không đóng được đợt:
+  Đợt phải Đang mở và đã đến giờ đóng đăng ký.
+
+- Báo dữ liệu đã thay đổi:
+  Tải lại danh sách để lấy phiên bản mới trước khi thao tác tiếp.
+
+13. ĐƯA LÊN GITHUB
+Tạo repository trống trên GitHub, sau đó chạy trong thư mục dự án:
+    git init
+    git add .
+    git commit -m "Add UC11 PHP MVC demo"
+    git branch -M main
+    git remote add origin https://github.com/YOUR_USERNAME/uc11-php-mvc.git
+    git push -u origin main
+
+Thay YOUR_USERNAME bằng tài khoản thật. Nếu repo đã có commit,
+clone repo trước rồi chép mã vào, không dùng force push.
+.gitignore loại trừ CSDL khỏi Git. Chưa push GitHub thay bạn.
+
+14. PHẠM VI
+Demo UC11 phục vụ học tập, có đăng nhập/đăng xuất hỗ trợ.
+Không triển khai UC10 và UC12 trong mã này.
+Khi triển khai thật, đặt DocumentRoot vào public để app, database,
+storage và tests nằm ngoài vùng truy cập web.
