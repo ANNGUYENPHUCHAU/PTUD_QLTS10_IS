@@ -1,0 +1,2 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Chưa kết nối dữ liệu</title><link rel="stylesheet" href="assets/uc19.css"></head>
+<body class="login-page"><main class="login-card"><h1>Chưa thể tải dữ liệu</h1><p>Hãy bật MySQL trong XAMPP, nhập cơ sở dữ liệu mẫu và kiểm tra cấu hình kết nối theo README.</p><a class="button primary" href="uc19.php">Thử lại</a></main></body></html>
