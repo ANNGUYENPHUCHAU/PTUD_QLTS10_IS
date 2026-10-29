@@ -1,0 +1,5 @@
+# XAMPP Apache: bảo vệ mã nội bộ và CSDL nếu đặt cả dự án trong htdocs.
+Options -Indexes
+RewriteEngine On
+RewriteRule ^(app|database|storage|tests)(/|$) - [F,L,NC]
+RewriteRule ^(README\.md|HUONG_DAN_UC11_MVC\.txt|KET_QUA_KIEM_TRA\.md|\.gitignore|\.git)(/|$) - [F,L,NC]
