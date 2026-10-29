@@ -1,60 +1,74 @@
 -- =======================================================
 -- CƠ SỞ DỮ LIỆU DEMO CHO UC09: THỐNG KÊ KẾT QUẢ TUYỂN SINH
--- Hệ thống Quản lý Tuyển sinh Lớp 10
+-- Tương thích 100% với cơ sở dữ liệu chung uc14_demo
 -- =======================================================
 
 CREATE DATABASE IF NOT EXISTS uc14_demo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE uc14_demo;
 
--- 1. BẢNG TRƯỜNG THCS (dùng để hiển thị trường cấp 2 của thí sinh)
+-- 1. BẢNG TRƯỜNG THCS (Tương thích cấu trúc chung của hệ thống)
 CREATE TABLE IF NOT EXISTS truong_thcs (
-    ma_truong VARCHAR(20) PRIMARY KEY,
-    ten_truong VARCHAR(150) NOT NULL,
-    quan_huyen VARCHAR(100) NOT NULL
+    ma_truong VARCHAR(12) PRIMARY KEY,
+    ten_truong VARCHAR(160) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT IGNORE INTO truong_thcs (ma_truong, ten_truong, quan_huyen) VALUES
-('THCS_01', 'THCS Lê Quý Đôn', 'Quận 3'),
-('THCS_02', 'THCS Nguyễn Du', 'Quận 1'),
-('THCS_03', 'THCS Colette', 'Quận 3'),
-('THCS_04', 'THCS Ba Đình', 'Quận 5');
+INSERT IGNORE INTO truong_thcs (ma_truong, ten_truong) VALUES
+('THCS01', 'THCS Nguyễn Du'),
+('THCS02', 'THCS Lê Quý Đôn'),
+('THCS03', 'THCS Nguyễn Trãi');
 
--- 2. BẢNG HỌC SINH / THÍ SINH
+-- 2. BẢNG ĐIỂM THI (Dùng cho khóa ngoại của học sinh nếu chưa có UC14)
+CREATE TABLE IF NOT EXISTS diem_thi (
+    ma_diem_thi VARCHAR(12) PRIMARY KEY,
+    ten_diem_thi VARCHAR(160) NOT NULL,
+    dia_chi VARCHAR(255) NOT NULL,
+    suc_chua_toi_da INT NOT NULL DEFAULT 0,
+    suc_chua_con_lai INT NOT NULL DEFAULT 0,
+    tong_so_thi_sinh INT NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT IGNORE INTO diem_thi (ma_diem_thi, ten_diem_thi, dia_chi, suc_chua_toi_da, suc_chua_con_lai, tong_so_thi_sinh) VALUES
+('DT01', 'THPT Nguyễn Huệ', 'Địa điểm demo số 01', 40, 40, 30),
+('DT02', 'THPT Trần Phú', 'Địa điểm demo số 02', 20, 20, 15);
+
+-- 3. BẢNG HỌC SINH / THÍ SINH (Tương thích 100% bảng hoc_sinh của hệ thống)
 CREATE TABLE IF NOT EXISTS hoc_sinh (
-    ma_hoc_sinh VARCHAR(20) PRIMARY KEY,
+    ma_hoc_sinh VARCHAR(12) PRIMARY KEY,
+    ma_truong VARCHAR(12) NOT NULL,
+    ma_diem_thi VARCHAR(12) NOT NULL,
     ho_ten VARCHAR(150) NOT NULL,
-    ngay_sinh DATE NOT NULL,
-    gioi_tinh VARCHAR(10) NOT NULL,
-    ma_truong VARCHAR(20) NULL,
-    CONSTRAINT fk_hs_thcs FOREIGN KEY (ma_truong) REFERENCES truong_thcs(ma_truong)
+    so_bao_danh CHAR(6) UNIQUE NULL,
+    trang_thai_phan_phong ENUM('ChuaPhan','DaPhan') NOT NULL DEFAULT 'ChuaPhan',
+    CONSTRAINT fk_hs_thcs FOREIGN KEY (ma_truong) REFERENCES truong_thcs(ma_truong),
+    CONSTRAINT fk_hs_diem FOREIGN KEY (ma_diem_thi) REFERENCES diem_thi(ma_diem_thi)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT IGNORE INTO hoc_sinh (ma_hoc_sinh, ho_ten, ngay_sinh, gioi_tinh, ma_truong) VALUES
-('HS001', 'Nguyễn Văn An', '2011-03-12', 'Nam', 'THCS_01'),
-('HS002', 'Trần Thị Bích', '2011-05-20', 'Nữ', 'THCS_01'),
-('HS003', 'Lê Hoàng Cường', '2011-08-15', 'Nam', 'THCS_02'),
-('HS004', 'Phạm Minh Đức', '2011-01-10', 'Nam', 'THCS_02'),
-('HS005', 'Võ Thùy Dung', '2011-11-25', 'Nữ', 'THCS_03'),
-('HS006', 'Đặng Quốc Hùng', '2011-04-18', 'Nam', 'THCS_03'),
-('HS007', 'Bùi Ngọc Lan', '2011-09-02', 'Nữ', 'THCS_04'),
-('HS008', 'Hoàng Gia Huy', '2011-07-14', 'Nam', 'THCS_01'),
-('HS009', 'Ngô Thu Thảo', '2011-12-01', 'Nữ', 'THCS_02'),
-('HS010', 'Đỗ Thành Long', '2011-06-30', 'Nam', 'THCS_04'),
-('HS011', 'Trịnh Khánh Vy', '2011-02-14', 'Nữ', 'THCS_01'),
-('HS012', 'Phan Hữu Nghĩa', '2011-10-09', 'Nam', 'THCS_03'),
-('HS013', 'Lý Bảo Trâm', '2011-07-22', 'Nữ', 'THCS_02'),
-('HS014', 'Dương Tuấn Khải', '2011-03-05', 'Nam', 'THCS_04'),
-('HS015', 'Mai Thanh Vân', '2011-08-19', 'Nữ', 'THCS_01'),
-('HS016', 'Tạ Quốc Bảo', '2011-12-11', 'Nam', 'THCS_03'),
-('HS017', 'Vũ Quỳnh Như', '2011-05-04', 'Nữ', 'THCS_02'),
-('HS018', 'Đinh Công Phượng', '2011-09-17', 'Nam', 'THCS_04'),
-('HS019', 'Lưu Ánh Nguyệt', '2011-06-08', 'Nữ', 'THCS_01'),
-('HS020', 'Châu Vĩnh Phúc', '2011-01-29', 'Nam', 'THCS_03'),
-('HS021', 'Quách Mỹ Linh', '2011-04-03', 'Nữ', 'THCS_02'),
-('HS022', 'Hồ Quang Hiếu', '2011-11-13', 'Nam', 'THCS_04'),
-('HS023', 'Thái Kim Yến', '2011-10-21', 'Nữ', 'THCS_01');
+INSERT IGNORE INTO hoc_sinh (ma_hoc_sinh, ma_truong, ma_diem_thi, ho_ten) VALUES
+('HS001', 'THCS01', 'DT01', 'Nguyễn Văn An'),
+('HS002', 'THCS01', 'DT01', 'Trần Thị Bình'),
+('HS003', 'THCS01', 'DT01', 'Lê Hoàng Chi'),
+('HS004', 'THCS01', 'DT01', 'Phạm Anh Dũng'),
+('HS005', 'THCS01', 'DT01', 'Võ Thị Duyên'),
+('HS006', 'THCS01', 'DT01', 'Hoàng Minh Đức'),
+('HS007', 'THCS01', 'DT01', 'Đặng Ngọc Hà'),
+('HS008', 'THCS01', 'DT01', 'Bùi Gia Hân'),
+('HS009', 'THCS01', 'DT01', 'Ngô Thanh Hải'),
+('HS010', 'THCS01', 'DT01', 'Phan Thị Hương'),
+('HS011', 'THCS01', 'DT01', 'Đỗ Minh Khang'),
+('HS012', 'THCS01', 'DT01', 'Huỳnh Thảo Lan'),
+('HS013', 'THCS01', 'DT01', 'Nguyễn Đức Long'),
+('HS014', 'THCS01', 'DT01', 'Trần Mỹ Linh'),
+('HS015', 'THCS01', 'DT01', 'Lê Thị Mai'),
+('HS016', 'THCS02', 'DT01', 'Phạm Nhật Minh'),
+('HS017', 'THCS02', 'DT01', 'Võ Hữu Nghĩa'),
+('HS018', 'THCS02', 'DT01', 'Hoàng Thu Ngân'),
+('HS019', 'THCS02', 'DT01', 'Đặng Kim Oanh'),
+('HS020', 'THCS02', 'DT01', 'Bùi Minh Phát'),
+('HS021', 'THCS02', 'DT01', 'Ngô Thị Phương'),
+('HS022', 'THCS02', 'DT01', 'Phan Hoàng Quân'),
+('HS023', 'THCS02', 'DT01', 'Đỗ Thị Quỳnh');
 
--- 3. BẢNG TRƯỜNG THPT
+-- 4. BẢNG TRƯỜNG THPT
 CREATE TABLE IF NOT EXISTS truong_thpt (
     ma_truong_thpt VARCHAR(12) PRIMARY KEY,
     ten_truong VARCHAR(160) NOT NULL,
@@ -67,7 +81,7 @@ INSERT IGNORE INTO truong_thpt (ma_truong_thpt, ten_truong, dia_chi, so_dien_tho
 ('THPT02', 'THPT Trần Phú', 'Số 45 Lê Thúc Hoạch, Quận Tân Phú, TP.HCM', '02838604321'),
 ('THPT03', 'THPT Gia Định', 'Số 195/29 Xô Viết Nghệ Tĩnh, Quận Bình Thạnh, TP.HCM', '02838991234');
 
--- 4. BẢNG CHỈ TIÊU & ĐIỂM CHUẨN TRƯỜNG THPT THEO NĂM
+-- 5. BẢNG CHỈ TIÊU & ĐIỂM CHUẨN TRƯỜNG THPT THEO NĂM
 CREATE TABLE IF NOT EXISTS chi_tieu_thpt (
     ma_chi_tieu INT AUTO_INCREMENT PRIMARY KEY,
     ma_truong_thpt VARCHAR(12) NOT NULL,
@@ -88,10 +102,10 @@ INSERT IGNORE INTO chi_tieu_thpt (ma_truong_thpt, nam_tuyen_sinh, tong_chi_tieu,
 ('THPT01', 2025, 420, 0,  21.75, 22.75, 23.75),
 ('THPT02', 2025, 360, 0,  20.00, 21.00, 22.00);
 
--- 5. BẢNG HỒ SƠ ĐĂNG KÝ VÀ KẾT QUẢ TUYỂN SINH
+-- 6. BẢNG HỒ SƠ ĐĂNG KÝ VÀ KẾT QUẢ TUYỂN SINH
 CREATE TABLE IF NOT EXISTS ho_so_tuyen_sinh_thpt (
     ma_ho_so INT AUTO_INCREMENT PRIMARY KEY,
-    ma_hoc_sinh VARCHAR(20) NOT NULL,
+    ma_hoc_sinh VARCHAR(12) NOT NULL,
     nam_tuyen_sinh INT NOT NULL DEFAULT 2026,
     ma_truong_thpt VARCHAR(12) NOT NULL,
     nguyen_vong INT NOT NULL COMMENT '1: NV1, 2: NV2, 3: NV3',
