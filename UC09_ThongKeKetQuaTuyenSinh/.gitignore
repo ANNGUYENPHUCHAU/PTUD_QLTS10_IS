@@ -1,0 +1,9 @@
+# Khong commit mat khau/cau hinh ca nhan
+app/Core/uc09-config.local.php
+.env
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+public/uploads/
